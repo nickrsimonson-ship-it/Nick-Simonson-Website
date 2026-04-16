@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nick Simonson, CFP® | Wealth Advisor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans: ['DM Sans', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --c-base:      #F0E8D6;   /* Sandy warm cream */
+      --c-surface:   #E8DFC9;   /* Deeper sand */
+      --c-raised:    #F8F2E6;   /* Card surface */
+      --c-hover:     #F3EBD8;   /* Hover */
+      --c-border:    #D0C4AC;   /* Warm border */
+      --c-gold:      #B5633A;   /* Terracotta — primary */
+      --c-gold-lt:   #8A9B72;   /* Sage highlight */
+      --c-green:     #768B5E;   /* Olive sage — secondary */
+      --c-cream:     #1E1A14;   /* Warm near-black — text */
+      --c-sage:      #6B6055;   /* Warm mid — secondary text */
+      --c-muted:     #9E9080;   /* Muted */
+      --c-dark:      #252B1E;   /* Deep forest */
+      --c-dark-text: #EDE5D0;   /* Text on dark */
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--c-base);
+      color: var(--c-cream);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── GRAIN ─────────────────────────────── */
+    #grain {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999;
+      opacity: .032;
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ─── NAV ─────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      transition: background .35s ease, border-color .35s ease;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      background: rgba(240,232,214,.97);
+      backdrop-filter: blur(14px);
+      border-color: var(--c-border);
+    }
+
+    /* ─── HERO ────────────────────────────────── */
+    .hero-bg {
+      background-color: var(--c-base);
+      background-image:
+        radial-gradient(ellipse 80% 65% at 8% 115%,  rgba(118,139,94,.18)  0%, transparent 58%),
+        radial-gradient(ellipse 55% 45% at 90% -8%,  rgba(181,99,58,.07)   0%, transparent 52%),
+        radial-gradient(ellipse 60% 50% at 55% 90%,  rgba(240,232,214,.85) 0%, transparent 100%);
+    }
+
+    /* ─── ANIMATIONS ──────────────────────────── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(26px) } to { opacity:1; transform:none } }
+    @keyframes fadeIn   { from { opacity:0 } to { opacity:1 } }
+    @keyframes growLine { from { width:0 } to { width:100% } }
+    @keyframes pulse    { 0%,100% { opacity:1 } 50% { opacity:.4 } }
+    @keyframes scrollDrop {
+      0%   { transform:scaleY(0); transform-origin:top;    opacity:0 }
+      35%  { transform:scaleY(1); transform-origin:top;    opacity:1 }
+      65%  { transform:scaleY(1); transform-origin:bottom; opacity:1 }
+      100% { transform:scaleY(0); transform-origin:bottom; opacity:0 }
+    }
+
+    .h1 { animation: fadeUp .95s cubic-bezier(.16,1,.3,1) both }
+    .h2 { animation: fadeUp .95s cubic-bezier(.16,1,.3,1) .12s both }
+    .h3 { animation: fadeUp .95s cubic-bezier(.16,1,.3,1) .24s both }
+    .h4 { animation: fadeUp .95s cubic-bezier(.16,1,.3,1) .38s both }
+    .h5 { animation: fadeUp .95s cubic-bezier(.16,1,.3,1) .52s both }
+    .h6 { animation: fadeUp .95s cubic-bezier(.16,1,.3,1) .68s both }
+
+    .gold-rule {
+      display: block; height: 1px; max-width: 260px;
+      background: linear-gradient(90deg, var(--c-gold), transparent);
+      animation: growLine 1.1s cubic-bezier(.16,1,.3,1) .55s both;
+    }
+
+    /* ─── SCROLL REVEAL ───────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity .7s cubic-bezier(.16,1,.3,1),
+                  transform .7s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.vis { opacity:1; transform:none }
+    .d1 { transition-delay: .08s }
+    .d2 { transition-delay: .18s }
+    .d3 { transition-delay: .28s }
+    .d4 { transition-delay: .38s }
+    .d5 { transition-delay: .48s }
+
+    /* ─── CARDS ───────────────────────────────── */
+    .lift {
+      transition: transform .3s cubic-bezier(.16,1,.3,1),
+                  box-shadow .3s ease,
+                  border-color .3s ease;
+    }
+    .lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px -8px rgba(37,43,30,.18), 0 0 0 1px rgba(118,139,94,.3);
+      border-color: rgba(118,139,94,.35) !important;
+    }
+
+    /* ─── EXPERTISE CARD ──────────────────────── */
+    .exp-card {
+      position: relative;
+      background: rgba(118,139,94,.1);
+      border: 1px solid rgba(118,139,94,.22);
+      border-radius: 2px; padding: 1.5rem;
+      transition: border-color .3s ease,
+                  transform .3s cubic-bezier(.16,1,.3,1),
+                  box-shadow .3s ease;
+    }
+    .exp-card:hover {
+      border-color: rgba(118,139,94,.5);
+      background: rgba(118,139,94,.16);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px -6px rgba(37,43,30,.14);
+    }
+
+    /* ─── EXPERTISE PLUS BTN ─────────────────── */
+    .exp-plus-btn {
+      background: none;
+      border: 1px solid var(--c-gold);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .exp-plus-btn:hover {
+      background: rgba(181,99,58,.12);
+    }
+
+    /* ─── CASE STUDY ──────────────────────────── */
+    .case-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .65s cubic-bezier(.16,1,.3,1);
+    }
+    .case-body.open { max-height: 4000px }
+
+    .case-btn {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 1rem;
+      width: 100%; text-align: left;
+      background: transparent; border: none;
+      padding: 2rem; cursor: pointer;
+      transition: background .25s ease;
+    }
+    .case-btn:hover { background: rgba(0,0,0,.018) }
+
+    /* ─── TIMELINE ────────────────────────────── */
+    .tl-wrap  { padding-left: 1.75rem; position: relative }
+    .tl-item  { position: relative; padding-left: .875rem; margin-bottom: 2.75rem }
+    .tl-item:last-child { margin-bottom: 0 }
+    .tl-item::before {
+      content: ''; position: absolute;
+      left: -1.75rem; top: 7px;
+      width: 8px; height: 8px;
+      border-radius: 50%; background: var(--c-gold);
+      box-shadow: 0 0 0 3px rgba(181,99,58,.2);
+    }
+    .tl-item::after {
+      content: ''; position: absolute;
+      left: calc(-1.75rem + 3.5px); top: 15px;
+      width: 1px; height: calc(100% + 2.75rem);
+      background: var(--c-border);
+    }
+    .tl-item:last-child::after { display: none }
+
+    /* ─── BUTTONS ─────────────────────────────── */
+    .btn-g {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 12px 26px;
+      background: var(--c-gold); color: #FFFFFF;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px;
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .btn-g:hover {
+      background: #96502D;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px -4px rgba(181,99,58,.4);
+    }
+    .btn-g:active { transform: none }
+
+    .btn-o {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 26px;
+      border: 1px solid var(--c-border); color: var(--c-cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    .btn-o:hover {
+      border-color: var(--c-green);
+      background: rgba(118,139,94,.08);
+      transform: translateY(-1px);
+    }
+    .btn-o:active { transform: none }
+
+    /* ─── MISC ────────────────────────────────── */
+    .tag {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; border-radius: 2px;
+      font-size: .68rem; font-weight: 500;
+      letter-spacing: .07em; text-transform: uppercase;
+    }
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--c-green), rgba(118,139,94,.3), transparent);
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; color: var(--c-gold); line-height: 1;
+    }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--c-gold); outline-offset: 3px;
+    }
+    ::-webkit-scrollbar { width: 4px }
+    ::-webkit-scrollbar-track { background: var(--c-base) }
+    ::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 2px }
+
+    /* ─── DARK STRIP ─────────────────────────── */
+    .dark-strip {
+      background: var(--c-dark);
+      padding: 5rem 3rem;
+    }
+    .dark-strip p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--c-dark-text);
+      line-height: 1.55;
+      letter-spacing: -.015em;
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .dark-strip .attr {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .75rem;
+      font-style: normal;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: rgba(118,139,94,.8);
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 900px) {
+      .grid-2col { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+      .grid-3col { grid-template-columns: 1fr !important; }
+      .col-span-2 { grid-column: span 1 !important; }
+      .hide-mobile { display: none !important; }
+      section, #contact > div { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+      h1 { font-size: clamp(3.2rem, 14vw, 5rem) !important; }
+      .tl-wrap { padding-left: 1.25rem }
+    }
+
+    /* nav link active */
+    .nav-a {
+      color: var(--c-sage); text-decoration: none;
+      font-size: .73rem; letter-spacing: .13em; text-transform: uppercase;
+      transition: color .2s ease;
+    }
+    .nav-a:hover, .nav-a.active { color: var(--c-cream) }
+
+    /* rec card */
+    .rec {
+      padding: 1.25rem;
+      background: rgba(118,139,94,.06);
+      border: 1px solid rgba(118,139,94,.18);
+      border-radius: 2px;
+    }
+
+    /* challenge row */
+    .chal {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: .875rem;
+      background: rgba(0,0,0,.025);
+      border: 1px solid var(--c-border);
+      border-radius: 2px;
+    }
+
+    /* tool chip */
+    .tool-chip {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 10px;
+      background: rgba(0,0,0,.025);
+      border-radius: 2px;
+      font-size: .79rem; color: var(--c-sage);
+    }
+    .tool-chip span { width:6px; height:6px; background:var(--c-gold); border-radius:50%; flex-shrink:0 }
+
+    /* impact stat */
+    .imp { display: flex; flex-direction: column; gap: .25rem }
+    .imp .val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300;
+      color: var(--c-gold); line-height: 1;
+    }
+    .imp .lbl { font-size: .7rem; color: var(--c-sage); letter-spacing: .06em }
+  </style>
+</head>
+
+<body>
+  <!-- grain overlay generated by JS -->
+  <div id="grain"></div>
+
+  <!-- ═══════════════════════════════════════════ NAV -->
+  <nav id="nav">
+    <div style="max-width:1280px;margin:0 auto;padding:1.25rem 3rem;display:flex;align-items:center;justify-content:space-between;">
+      <a href="#" style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;letter-spacing:-.02em;color:var(--c-cream);text-decoration:none;">
+        Nick Simonson&nbsp;<span style="color:var(--c-gold)">CFP®</span>
+      </a>
+      <div class="hidden md:flex items-center" style="gap:2.5rem;">
+        <a href="#about"      class="nav-a">About</a>
+        <a href="#expertise"  class="nav-a">Expertise</a>
+        <a href="#cases"      class="nav-a">Case Studies</a>
+        <a href="#experience" class="nav-a">Experience</a>
+        <a href="#contact" class="btn-g" style="padding:9px 20px;font-size:.72rem;">Get in Touch</a>
+      </div>
+      <button id="mob-btn" class="md:hidden" style="color:var(--c-cream);background:none;border:none;cursor:pointer;" aria-label="Menu">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M3 7h16M3 11h16M3 15h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div id="mob-menu" class="hidden md:hidden" style="padding:.5rem 1.5rem 1.25rem;border-top:1px solid var(--c-border);">
+      <div style="display:flex;flex-direction:column;gap:.875rem;">
+        <a href="#about"      class="nav-a" onclick="closeMob()">About</a>
+        <a href="#expertise"  class="nav-a" onclick="closeMob()">Expertise</a>
+        <a href="#cases"      class="nav-a" onclick="closeMob()">Case Studies</a>
+        <a href="#experience" class="nav-a" onclick="closeMob()">Experience</a>
+        <a href="#contact" class="btn-g" style="width:fit-content;margin-top:.25rem;" onclick="closeMob()">Get in Touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ HERO -->
+  <section class="hero-bg" style="min-height:100svh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:7rem 3rem 5rem;">
+
+    <!-- geometric accents -->
+    <div style="position:absolute;top:0;right:0;width:1px;height:38%;background:linear-gradient(180deg,transparent,var(--c-border),transparent);opacity:.5;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:18%;right:22%;width:72px;height:1px;background:var(--c-gold);opacity:.25;pointer-events:none;"></div>
+    <div style="position:absolute;top:28%;right:9%;width:1px;height:56px;background:var(--c-gold);opacity:.18;pointer-events:none;"></div>
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(118,139,94,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(118,139,94,.06) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;opacity:.6;"></div>
+
+    <div style="max-width:1280px;margin:0 auto;width:100%;">
+      <div style="max-width:780px;">
+
+        <!-- eyebrow -->
+        <div class="h1">
+          <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:2.25rem;">
+            <span style="width:28px;height:1px;background:var(--c-gold);"></span>
+            <span style="font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:500;">Certified Financial Planner · Madison, WI</span>
+          </div>
+        </div>
+
+        <!-- name -->
+        <div class="h2">
+          <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(4.2rem,10.5vw,9.5rem);font-weight:300;line-height:.92;letter-spacing:-.04em;color:var(--c-cream);">
+            Nick<br><span style="color:var(--c-gold-lt);">Simonson</span>
+          </h1>
+        </div>
+
+        <span class="gold-rule" style="margin:1.75rem 0 2rem;"></span>
+
+        <!-- tagline -->
+        <div class="h3">
+          <p style="font-size:clamp(1rem,1.4vw,1.15rem);line-height:1.75;color:var(--c-sage);max-width:520px;font-weight:300;">
+            Wealth Advisor specializing in comprehensive, tax-efficient financial planning. Midwestern hospitality meets financial precision — helping clients move with confidence and clarity through all seasons of life.
+          </p>
+        </div>
+
+        <!-- CTAs -->
+        <div class="h4" style="margin-top:2.5rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;">
+          <a href="#cases" class="btn-g">View Planning Work</a>
+          <a href="#contact" class="btn-o">Get in Touch</a>
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- scroll indicator -->
+    <div style="position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;animation:fadeIn 1.2s ease 1.1s both;">
+      <span style="font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);">Scroll</span>
+      <div style="width:1px;height:44px;background:linear-gradient(180deg,var(--c-border),transparent);animation:scrollDrop 2.2s ease infinite;"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ ABOUT -->
+  <section id="about" style="padding:6rem 3rem;background:var(--c-surface);">
+    <div style="max-width:1280px;margin:0 auto;">
+      <div class="grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;">
+
+        <!-- left -->
+        <div>
+          <div class="reveal">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+              <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">01</span>
+              <span style="width:36px;height:1px;background:var(--c-gold);"></span>
+              <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-sage);">About</span>
+            </div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:400;line-height:1.1;letter-spacing:-.03em;color:var(--c-cream);margin-bottom:1.25rem;">
+              Comprehensive planning.<br><em style="color:var(--c-gold-lt);">Genuine care.</em>
+            </h2>
+            <div class="gold-divider reveal d1" style="max-width:190px;margin-bottom:1.75rem;"></div>
+          </div>
+
+          <div class="reveal d2" style="display:flex;flex-direction:column;gap:1.1rem;">
+            <p style="font-size:.96rem;line-height:1.82;color:var(--c-sage);font-weight:300;">
+              I'm a Wealth Advisor at an independent RIA in Wisconsin, where I help individuals and families make wise financial decisions through every season of life.
+            </p>
+            <p style="font-size:.96rem;line-height:1.82;color:var(--c-sage);font-weight:300;">
+              My philosophy is simple: great financial planning is not about chasing headlines or reacting to markets. It's about building a disciplined, tax-aware strategy that aligns your money with the life you want to live. The real value of advice comes from clarity, behavior, and a steady hand when life inevitably changes.
+            </p>
+            <p style="font-size:.96rem;line-height:1.82;color:var(--c-sage);font-weight:300;">
+              That means looking at the full picture—cash flow, taxes, investments, retirement planning, and the tradeoffs behind every major financial decision. Together, I work with clients to build a thoughtful plan designed to help grow wealth efficiently, accomplish goals, and stay confident through uncertainty.
+            </p>
+            <p style="font-size:.96rem;line-height:1.82;color:var(--c-sage);font-weight:300;">
+              I am a Certified Financial Planner, and I bring an added tax lens to the planning process, helping uncover opportunities such as capital gains management, tax-efficient investment management, Roth conversions, and retirement income strategies that can meaningfully improve long-term outcomes.
+            </p>
+            <p style="font-size:.96rem;line-height:1.82;color:var(--c-sage);font-weight:300;">
+              Above all, I take seriously the trust clients place in me. My role is to help clients make wise decisions, avoid mistakes, stay grounded through uncertainty, and use their wealth as a tool to fully live the life they envision.
+            </p>
+          </div>
+
+          <div class="reveal d3" style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--c-border);">
+            <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">Education</div>
+            <div style="font-size:1rem;font-weight:500;color:var(--c-cream);margin-bottom:3px;">University of Wisconsin–Madison</div>
+            <div style="font-size:.875rem;color:var(--c-sage);">BBA in Business Marketing · 2014–2018</div>
+          </div>
+        </div>
+
+        <!-- right -->
+        <div>
+          <!-- credentials -->
+          <div class="reveal d1" style="margin-bottom:2.25rem;">
+            <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:1.1rem;">Credentials</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;">
+              <div class="lift" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;padding:1.25rem;">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:600;color:var(--c-gold);margin-bottom:5px;">CFP®</div>
+                <div style="font-size:.72rem;color:var(--c-sage);letter-spacing:.04em;">Certified Financial Planner</div>
+              </div>
+              <div class="lift" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;padding:1.25rem;">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:600;color:var(--c-gold);margin-bottom:5px;">CPA</div>
+                <div style="font-size:.72rem;color:var(--c-sage);letter-spacing:.04em;">Candidate · In Progress</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- tech stack -->
+          <div class="reveal d2" style="margin-bottom:2.25rem;">
+            <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:1.1rem;">Planning &amp; Technology</div>
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">MoneyGuide Pro</span>
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">E-Money</span>
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">Holistiplan</span>
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">IncomeLabs</span>
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">Nitrogen</span>
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">Fidelity</span>
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">Schwab</span>
+              <span style="display:inline-flex;padding:5px 11px;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;font-size:.77rem;color:var(--c-sage);">Salesforce</span>
+            </div>
+          </div>
+
+          <!-- contact card -->
+          <div class="reveal d3" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;padding:1.5rem;">
+            <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:1.1rem;">Contact</div>
+            <div style="display:flex;flex-direction:column;gap:.875rem;">
+              <a href="tel:6085729143" style="display:flex;align-items:center;gap:10px;color:var(--c-sage);text-decoration:none;font-size:.9rem;transition:color .2s ease;" onmouseover="this.style.color='var(--c-cream)'" onmouseout="this.style.color='var(--c-sage)'">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1.5 2.5c0-.553.447-1 1-1h1.927a1 1 0 0 1 .985.837l.357 2.142a1 1 0 0 1-.548 1.07l-.893.447a7.503 7.503 0 0 0 3.676 3.676l.447-.893a1 1 0 0 1 1.07-.548l2.142.357a1 1 0 0 1 .837.986V11.5a1 1 0 0 1-1 1C6.037 12.5 1.5 7.963 1.5 3.5V2.5Z" stroke="currentColor" stroke-width="1.1"/></svg>
+                608-572-9143
+              </a>
+              <a href="mailto:nickrsimonson@gmail.com" style="display:flex;align-items:center;gap:10px;color:var(--c-sage);text-decoration:none;font-size:.9rem;transition:color .2s ease;" onmouseover="this.style.color='var(--c-cream)'" onmouseout="this.style.color='var(--c-sage)'">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="3.5" width="12" height="8" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M1.5 4.5l6 4 6-4" stroke="currentColor" stroke-width="1.1"/></svg>
+                nickrsimonson@gmail.com
+              </a>
+              <div style="display:flex;align-items:center;gap:10px;color:var(--c-sage);font-size:.9rem;">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1C5.015 1 3 3.015 3 5.5c0 3.75 4.5 8.5 4.5 8.5S12 9.25 12 5.5C12 3.015 9.985 1 7.5 1Z" stroke="currentColor" stroke-width="1.1"/><circle cx="7.5" cy="5.5" r="1.5" stroke="currentColor" stroke-width="1.1"/></svg>
+                Madison, Wisconsin
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ DARK STRIP -->
+  <div class="dark-strip">
+    <p>"Planning isn't about perfect numbers—it's about creating the clarity and confidence clients need to live life without financial worry."</p>
+    <div class="attr">Nick Simonson, CFP® · Wealth Advisor</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ EXPERTISE -->
+  <section id="expertise" style="padding:6rem 3rem;background:var(--c-base);">
+    <div style="max-width:1280px;margin:0 auto;">
+
+      <div class="reveal" style="margin-bottom:3.5rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">02</span>
+          <span style="width:36px;height:1px;background:var(--c-gold);"></span>
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-sage);">Expertise</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:400;line-height:1.1;letter-spacing:-.03em;color:var(--c-cream);max-width:560px;">
+          Planning that goes beyond<br><em style="color:var(--c-gold-lt);">the numbers.</em>
+        </h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem;">
+
+        <div class="exp-card reveal d1" onclick="openModal('m1')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2 13l3.5-4.5 2.5 2.5 3.5-5 3 3" stroke="#768B5E" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Retirement Planning</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">Retirement is more than reaching a number. It's about creating the confidence to step away from work knowing your lifestyle is secure.</p>
+          <div id="plus-m1" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+
+        <div class="exp-card reveal d2" onclick="openModal('m2')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="6" stroke="#768B5E" stroke-width="1.25"/><path d="M8.5 5.5v3l2 2" stroke="#768B5E" stroke-width="1.25" stroke-linecap="round"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Tax Strategy &amp; Roth Conversions</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">Tax planning is one of the most direct ways to improve long-term outcomes without taking additional investment risk.</p>
+          <div id="plus-m2" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+
+        <div class="exp-card reveal d1" onclick="openModal('m4')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="1.5" y="1.5" width="6" height="6" rx="1" stroke="#768B5E" stroke-width="1.25"/><rect x="9.5" y="1.5" width="6" height="6" rx="1" stroke="#768B5E" stroke-width="1.25"/><rect x="1.5" y="9.5" width="6" height="6" rx="1" stroke="#768B5E" stroke-width="1.25"/><rect x="9.5" y="9.5" width="6" height="6" rx="1" stroke="#768B5E" stroke-width="1.25"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Investment Management</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">Investment management should support the plan, not distract from it.</p>
+          <div id="plus-m4" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+
+        <div class="exp-card reveal d2" onclick="openModal('m8')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="3" y="2" width="11" height="13" rx="1" stroke="#768B5E" stroke-width="1.25"/><path d="M6 6h5M6 9h5M6 12h3" stroke="#768B5E" stroke-width="1.15" stroke-linecap="round"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Estate Planning</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">Simple estate planning focuses on making sure the foundational pieces of your plan are organized, up to date, and aligned with your financial life.</p>
+          <div id="plus-m8" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+
+
+        <div class="exp-card reveal d3" onclick="openModal('m3')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 2v13M4 6l4.5-4 4.5 4" stroke="#768B5E" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 15h11" stroke="#768B5E" stroke-width="1.25" stroke-linecap="round"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Social Security Optimization</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">The Social Security claiming decision is a very important retirement choice clients make.</p>
+          <div id="plus-m3" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+
+        <div class="exp-card reveal d2" onclick="openModal('m5')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2 8.5h13M2 5h13M2 12h8" stroke="#768B5E" stroke-width="1.25" stroke-linecap="round"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Cash Flow &amp; Withdrawal Strategy</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">A great financial plan incorporates how money moves.</p>
+          <div id="plus-m5" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+
+        <div class="exp-card reveal d3" onclick="openModal('m6')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 2a5.5 5.5 0 1 0 0 11A5.5 5.5 0 0 0 8.5 2Z" stroke="#768B5E" stroke-width="1.25"/><path d="M8.5 6v2.75l1.25 1.25" stroke="#768B5E" stroke-width="1.25" stroke-linecap="round"/><path d="M5 15.5s.5-1.5 3.5-1.5 3.5 1.5 3.5 1.5" stroke="#768B5E" stroke-width="1.1" stroke-linecap="round"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Healthcare Planning</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">Healthcare decisions can have an outsized impact on both cash flow and taxes, especially in the years before Medicare.</p>
+          <div id="plus-m6" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+
+        <div class="exp-card reveal d1" onclick="openModal('m7')" style="cursor:pointer;">
+          <div style="width:36px;height:36px;border:1px solid rgba(118,139,94,.3);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 2l1.5 4.5H15l-3.75 2.75 1.5 4.5L8.5 11 5.25 13.75l1.5-4.5L3 6.5h5z" stroke="#768B5E" stroke-width="1.15" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 style="font-size:.975rem;font-weight:600;color:var(--c-cream);margin-bottom:.5rem;letter-spacing:-.01em;">Charitable Giving</h3>
+          <p style="font-size:.84rem;line-height:1.68;color:var(--c-sage);font-weight:300;">Charitable planning is about aligning generosity with tax efficiency so clients can make a greater impact with the wealth they've built.</p>
+          <div id="plus-m7" class="exp-plus-btn" style="position:absolute;bottom:1.25rem;right:1.25rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;line-height:1;padding:0;">+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ EXPERTISE MODALS -->
+  <div id="modal-overlay" onclick="closeModal()" style="display:none;position:fixed;inset:0;background:rgba(30,26,20,.7);z-index:1000;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);"></div>
+
+  <div id="m1" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Retirement Planning</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I help clients build a retirement roadmap that answers the questions that matter most: Can I retire? When can I retire? How much can I safely spend?</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What I work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Retirement probability modeling with Monte Carlo simulations</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Withdrawal rate analysis and longevity stress testing</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Pension, annuity, and Social Security integration</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Inflation and healthcare cost assumptions</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Sequence-of-returns risk management</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Retirement date comparisons and "what-if" scenarios</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Goal-based cash flow modeling for lifestyle spending</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">The goal is to replace uncertainty with a plan clients can trust.</p>
+  </div>
+
+  <div id="m2" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Tax Strategy &amp; Roth Conversions</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I help clients make tax-aware decisions across their working years, retirement transition, and distribution phase so more of their wealth stays working for them.</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What we work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Roth conversion analysis and timing windows</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>RMD mitigation strategies</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Bracket management across retirement "gap years"</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Capital gains harvesting and tax-loss harvesting</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Charitable giving and QCD coordination</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Medicare IRMAA threshold planning</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Tax-efficient withdrawal sequencing</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Collaboration with CPAs and tax preparers</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">The focus is lifetime tax efficiency—not just reducing this year's bill.</p>
+  </div>
+
+  <div id="m3" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Social Security Optimization</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I help clients evaluate the tradeoffs between claiming early, at full retirement age, or delaying benefits, while coordinating the decision with the rest of their financial plan.</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What we work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Break-even age analysis</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Spousal and survivor strategies</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Claiming coordination for married couples</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Widowhood income planning</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Taxation of benefits</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Social Security + Roth conversion timing</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Bridge withdrawal strategies before claiming</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Claiming decisions within retirement cash flow plans</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">The result is a claiming strategy aligned with both longevity and lifestyle goals.</p>
+  </div>
+
+  <div id="m4" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Investment Management</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I design portfolios around each client's goals, tax situation, and required cash flow needs, helping them stay disciplined through every market cycle.</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What we work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Evidence-based portfolio construction</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Asset allocation based on risk capacity and goals</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Tax-efficient asset location</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Rebalancing and drift management</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Tax-loss harvesting opportunities</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Concentrated stock risk management</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Withdrawal portfolio segmentation for retirees</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Behavioral coaching during market volatility</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">The objective is simple: create a portfolio that gives clients confidence to stay invested and fund the life they want.</p>
+  </div>
+
+  <div id="m5" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Cash Flow &amp; Withdrawal Strategy</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I help clients create sustainable withdrawal and spending strategies that align their lifestyle goals with tax efficiency and portfolio longevity.</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What I work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Withdrawal sequencing across taxable, IRA, and Roth assets</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Safe spending guardrails and dynamic adjustments</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Bucket strategy design</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Cash reserve and HYSA bridge planning</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Pension and fixed income coordination</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Early retirement bridge distributions</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>One-time large expense planning</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Spending policy updates during market downturns</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">This work gives clients clarity around how much they can spend confidently today without jeopardizing tomorrow.</p>
+  </div>
+
+  <div id="m6" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Healthcare Planning</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I help clients proactively plan around insurance costs, subsidy opportunities, and healthcare-related tax traps.</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What we work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>ACA subsidy optimization</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>MAGI management for premium credits</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Pre-Medicare retirement bridge strategies</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>COBRA vs ACA comparisons</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>HSA contribution and withdrawal planning</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Medicare IRMAA bracket management</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Healthcare cost assumptions in retirement projections</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Long-term care funding conversations</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">This helps clients retire with fewer surprises and more confidence around one of retirement's biggest expenses.</p>
+  </div>
+
+  <div id="m7" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Charitable Giving</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I help clients structure giving strategies that support the causes they care about while integrating those decisions into their broader retirement, tax, and estate plans.</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What I work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Gifting appreciated securities instead of cash</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Donor-advised fund strategy and grant planning</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Bunching charitable deductions into high-income years</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Qualified charitable distributions (QCDs) from IRAs</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Charitable giving during Roth conversion and RMD years</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Legacy gifting through trusts, wills, and beneficiary designations</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Charitable remainder and charitable lead trust coordination</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Family philanthropy and next-generation giving conversations</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Tax-aware giving around business or real estate sales</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Annual giving cash flow integration</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">The goal is to help clients maximize both their philanthropic impact and their after-tax financial outcomes.</p>
+  </div>
+
+  <div id="m8" class="exp-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--c-raised);border:1px solid var(--c-border);border-radius:4px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;padding:2.5rem;">
+    <button onclick="closeModal()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;cursor:pointer;color:var(--c-sage);font-size:1.25rem;line-height:1;">&#x2715;</button>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.5rem;">Estate Planning</h3>
+    <div style="width:40px;height:1px;background:var(--c-gold);margin-bottom:1.5rem;"></div>
+    <p style="font-size:.9rem;line-height:1.78;color:var(--c-sage);font-weight:300;margin-bottom:1.5rem;">I help clients address the core decisions that protect their loved ones, streamline asset transfer, and reduce unnecessary confusion during major life events. When in-depth planning is required, I help clients partner with legal professionals that specialize in the needed areas.</p>
+    <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">What I work on</div>
+    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Reviewing and updating beneficiary designations</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Account titling and transfer-on-death registrations</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Basic will and revocable trust coordination</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Durable power of attorney and healthcare directive reviews</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Guardian designations for minor children</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Life insurance ownership and beneficiary alignment</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Simple trust funding and retitling guidance</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Coordination with estate attorneys for document updates</li>
+      <li style="font-size:.875rem;color:var(--c-sage);font-weight:300;padding-left:1.1rem;position:relative;"><span style="position:absolute;left:0;color:var(--c-gold);">—</span>Periodic reviews after marriage, divorce, births, deaths, or major asset changes</li>
+    </ul>
+    <p style="font-size:.875rem;line-height:1.7;color:var(--c-cream);font-weight:400;font-style:italic;">The goal is to make sure the essential estate planning details are handled clearly and correctly so families avoid unnecessary stress when it matters most.</p>
+  </div>
+
+    <!-- ═══════════════════════════════════════════ CASE STUDIES -->
+  <section id="cases" style="padding:6rem 3rem;background:var(--c-surface);">
+    <div style="max-width:1280px;margin:0 auto;">
+
+      <div class="reveal" style="margin-bottom:3.5rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">03</span>
+          <span style="width:36px;height:1px;background:var(--c-gold);"></span>
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-sage);">Case Studies</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:400;line-height:1.1;letter-spacing:-.03em;color:var(--c-cream);margin-bottom:1rem;">
+          Planning in action.
+        </h2>
+        <p style="font-size:.96rem;line-height:1.75;color:var(--c-sage);max-width:540px;font-weight:300;">Real client scenarios. Each case demonstrates the full planning cycle from discovery through strategy implementation.</p>
+      </div>
+
+      <!-- ── CASE 1 ──────────────────────────────── -->
+      <div class="reveal d1" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;margin-bottom:2px;overflow:hidden;">
+
+        <button class="case-btn" onclick="toggleCase('c1')" id="c1-btn" aria-expanded="false">
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.6rem;margin-bottom:.875rem;">
+              <span class="tag" style="background:rgba(181,99,58,.08);color:var(--c-gold);border:1px solid rgba(118,139,94,.22);">Complex Retirement Transition</span>
+              <span class="tag" style="background:rgba(118,139,94,.1);color:var(--c-green);border:1px solid rgba(118,139,94,.3);">$2.8M Portfolio</span>
+              <span class="tag" style="background:rgba(0,0,0,.03);color:var(--c-sage);border:1px solid var(--c-border);">Couple · Age 59</span>
+            </div>
+            <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.35rem;">The About to Retire Case</h3>
+            <p style="font-size:.865rem;color:var(--c-sage);line-height:1.65;max-width:580px;font-weight:300;">Tech executive transitioning into retirement with MSFT stock, high-cost mutual funds, and significant pre-tax assets. Not "can they retire?" — but how to do it with maximum tax efficiency.</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-shrink:0;margin-top:.25rem;">
+            <div class="hidden md:block hide-mobile" style="text-align:right;">
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:300;color:var(--c-gold);">$2.1M</div>
+              <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-sage);">Lifetime Tax Savings</div>
+            </div>
+            <div id="c1-chevron-wrap" style="width:30px;height:30px;border:1px solid var(--c-border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .3s ease,transform .35s cubic-bezier(.16,1,.3,1);">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5 3.5-3.5" stroke="var(--c-sage)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </button>
+
+        <div class="case-body" id="c1-body">
+          <div style="padding:0 2rem 2.5rem;border-top:1px solid var(--c-border);">
+            <div class="grid-3col" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;margin-top:2rem;">
+
+              <!-- details: span 2 -->
+              <div class="col-span-2" style="grid-column:span 2;">
+
+                <!-- situation -->
+                <div style="margin-bottom:2rem;">
+                  <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">Client Situation</div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Portfolio</div>
+                      <div style="font-weight:600;color:var(--c-cream);">$2.8 Million</div>
+                    </div>
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Clients</div>
+                      <div style="font-weight:600;color:var(--c-cream);">Couple, Both Age 59</div>
+                    </div>
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Wife's Profile</div>
+                      <div style="font-weight:600;color:var(--c-cream);">Tech Executive · MSFT Stock</div>
+                    </div>
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Upcoming</div>
+                      <div style="font-weight:600;color:var(--c-cream);">$850K Home Sale · Move to MN</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- challenges -->
+                <div style="margin-bottom:2rem;">
+                  <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">Challenges Identified</div>
+                  <div style="display:flex;flex-direction:column;gap:.55rem;">
+                    <div class="chal">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#B5633A;margin-top:5px;flex-shrink:0;"></span>
+                      <span style="font-size:.865rem;color:var(--c-sage);line-height:1.6;"><strong style="color:var(--c-cream);">High-cost mutual funds</strong> — current holdings with elevated expense ratios dragging long-term performance</span>
+                    </div>
+                    <div class="chal">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#B5633A;margin-top:5px;flex-shrink:0;"></span>
+                      <span style="font-size:.865rem;color:var(--c-sage);line-height:1.6;"><strong style="color:var(--c-cream);">Looming RMD problem</strong> — at age 75, projected RMDs of $125–140K/yr would force 32%+ tax bracket</span>
+                    </div>
+                    <div class="chal">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#B5633A;margin-top:5px;flex-shrink:0;"></span>
+                      <span style="font-size:.865rem;color:var(--c-sage);line-height:1.6;"><strong style="color:var(--c-cream);">Healthcare gap (pre-Medicare)</strong> — income must be managed carefully to qualify for ACA marketplace subsidies</span>
+                    </div>
+                    <div class="chal">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#B5633A;margin-top:5px;flex-shrink:0;"></span>
+                      <span style="font-size:.865rem;color:var(--c-sage);line-height:1.6;"><strong style="color:var(--c-cream);">Concentrated stock positions</strong> — $59K gain in MSFT + $61K in taxable account needing tax-efficient liquidation</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- recommendations -->
+                <div>
+                  <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">Key Recommendations</div>
+                  <div style="display:flex;flex-direction:column;gap:.875rem;">
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">Roth Conversion Strategy</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Convert pre-tax assets during low-income gap years, filling the 22% bracket. Prevents future RMDs from forcing 32%+ taxation. Projected lifetime tax savings: <strong style="color:var(--c-cream);">$2.1 million</strong>. More valuable to beneficiaries under inherited Roth RMD rules vs. Traditional IRA.</p>
+                    </div>
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">0% Capital Gains Harvesting</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Realize $120K+ in MSFT and taxable account gains at <strong style="color:var(--c-cream);">0% capital gains tax</strong> by staying under ~$130K AGI in the transition year. Spread across two years if needed. Transition to 55ip direct indexing for ongoing tax-aware management.</p>
+                    </div>
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">ACA Healthcare Optimization</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Managed income below $125K to qualify for <strong style="color:var(--c-cream);">$385/month ACA premium tax credit</strong>. Recommended COBRA for 2026 (deductible already met via surgery). Bridged gap years with $50K HSA for premiums. Budgeted $25K/yr pre-Medicare, dropping to $11,280 post-Medicare.</p>
+                    </div>
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">Social Security Timing Analysis</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Analyzed FRA (67) vs. early (62) claiming. FRA lifetime benefits: <strong style="color:var(--c-cream);">$1,699,920</strong>. Early: $1,426,266. Neither measurably impacts plan success rate. Decision hinges on Roth conversion year income. Breakeven at age 76 — worth revisiting at 62.</p>
+                    </div>
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">Super Catch-Up &amp; SEP IRA Maximization</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">2026: Front-loaded 401k with super catch-up, contributed to <strong style="color:var(--c-cream);">Roth</strong> (IRS requires it — client qualifies at 59 because she turns 60 in the tax year). Husband received max SEP IRA contribution on 2025 self-employment income. Using outside assets to pay conversion taxes, maximizing Roth balance.</p>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- right sidebar -->
+              <div>
+                <div style="position:sticky;top:5.5rem;display:flex;flex-direction:column;gap:.875rem;">
+
+                  <div style="background:var(--c-base);border:1px solid var(--c-border);border-radius:2px;padding:1.375rem;">
+                    <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:1rem;">Tools Used</div>
+                    <div style="display:flex;flex-direction:column;gap:.45rem;">
+                      <div class="tool-chip"><span></span>MoneyGuide Pro</div>
+                      <div class="tool-chip"><span></span>IncomeLabs (SS + Withdrawal)</div>
+                      <div class="tool-chip"><span></span>Nitrogen (Risk Analysis)</div>
+                      <div class="tool-chip"><span></span>Holistiplan (Tax Return)</div>
+                      <div class="tool-chip"><span></span>55ip Direct Indexing</div>
+                    </div>
+                  </div>
+
+                  <div style="background:var(--c-base);border:1px solid rgba(118,139,94,.22);border-radius:2px;padding:1.375rem;">
+                    <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:1.25rem;">Planning Impact</div>
+                    <div style="display:flex;flex-direction:column;gap:1.1rem;">
+                      <div class="imp">
+                        <div class="val">$2.1M</div>
+                        <div class="lbl">Projected lifetime tax savings</div>
+                      </div>
+                      <div style="height:1px;background:var(--c-border);"></div>
+                      <div class="imp">
+                        <div class="val">$0</div>
+                        <div class="lbl">Cap gains tax on $120K+ in positions</div>
+                      </div>
+                      <div style="height:1px;background:var(--c-border);"></div>
+                      <div class="imp">
+                        <div class="val">$385/mo</div>
+                        <div class="lbl">ACA premium tax credit secured</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CASE 2 ──────────────────────────────── -->
+      <div class="reveal d2" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;overflow:hidden;">
+
+        <button class="case-btn" onclick="toggleCase('c2')" id="c2-btn" aria-expanded="false">
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.6rem;margin-bottom:.875rem;">
+              <span class="tag" style="background:rgba(181,99,58,.08);color:var(--c-gold);border:1px solid rgba(118,139,94,.22);">Midwest Retiree Optimization</span>
+              <span class="tag" style="background:rgba(118,139,94,.1);color:var(--c-green);border:1px solid rgba(118,139,94,.3);">$1.35M+ Portfolio</span>
+              <span class="tag" style="background:rgba(0,0,0,.03);color:var(--c-sage);border:1px solid var(--c-border);">Couple · Ages 59 &amp; 62</span>
+            </div>
+            <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:500;color:var(--c-cream);letter-spacing:-.02em;margin-bottom:.35rem;">The Farm Family Case</h3>
+            <p style="font-size:.865rem;color:var(--c-sage);line-height:1.65;max-width:580px;font-weight:300;">A debt-free midwestern couple — 300-acre farm, 25 years at one company, 100% equity 401k heading into retirement. Classic sequence-of-returns risk meets nuanced Social Security strategy.</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-shrink:0;margin-top:.25rem;">
+            <div class="hidden md:block hide-mobile" style="text-align:right;">
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:300;color:var(--c-gold);">$3,910</div>
+              <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-sage);">SS/mo at Age 70</div>
+            </div>
+            <div id="c2-chevron-wrap" style="width:30px;height:30px;border:1px solid var(--c-border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .3s ease,transform .35s cubic-bezier(.16,1,.3,1);">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5 3.5-3.5" stroke="var(--c-sage)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </button>
+
+        <div class="case-body" id="c2-body">
+          <div style="padding:0 2rem 2.5rem;border-top:1px solid var(--c-border);">
+            <div class="grid-3col" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;margin-top:2rem;">
+
+              <div class="col-span-2" style="grid-column:span 2;">
+
+                <!-- situation -->
+                <div style="margin-bottom:2rem;">
+                  <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">Client Situation</div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Liquid Assets</div>
+                      <div style="font-weight:600;color:var(--c-cream);">$1.356M</div>
+                    </div>
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Farm + Home</div>
+                      <div style="font-weight:600;color:var(--c-cream);">~$1M (their portion)</div>
+                    </div>
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Monthly Spend</div>
+                      <div style="font-weight:600;color:var(--c-cream);">$6,000/month</div>
+                    </div>
+                    <div style="padding:.875rem 1rem;background:rgba(0,0,0,.025);border:1px solid var(--c-border);border-radius:2px;">
+                      <div style="font-size:.67rem;color:var(--c-sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">Debt</div>
+                      <div style="font-weight:600;color:var(--c-green);">None — Debt Free</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- challenges -->
+                <div style="margin-bottom:2rem;">
+                  <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">Challenges Identified</div>
+                  <div style="display:flex;flex-direction:column;gap:.55rem;">
+                    <div class="chal">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#B5633A;margin-top:5px;flex-shrink:0;"></span>
+                      <span style="font-size:.865rem;color:var(--c-sage);line-height:1.6;"><strong style="color:var(--c-cream);">100% equity exposure at retirement onset</strong> — severe sequence-of-returns risk with $1M 401k fully in stocks entering the drawdown phase</span>
+                    </div>
+                    <div class="chal">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#B5633A;margin-top:5px;flex-shrink:0;"></span>
+                      <span style="font-size:.865rem;color:var(--c-sage);line-height:1.6;"><strong style="color:var(--c-cream);">Social Security timing tension</strong> — desire to travel early (take at 62) conflicts with mathematical optimization (delay to 70); both have merit</span>
+                    </div>
+                    <div class="chal">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#B5633A;margin-top:5px;flex-shrink:0;"></span>
+                      <span style="font-size:.865rem;color:var(--c-sage);line-height:1.6;"><strong style="color:var(--c-cream);">Farm sale complexity</strong> — $150K basis on ~$1M+ property; farmland tax exemptions, Medicare IRMAA impact, and step-up timing all in play</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- recommendations -->
+                <div>
+                  <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.875rem;">Key Recommendations</div>
+                  <div style="display:flex;flex-direction:column;gap:.875rem;">
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">Social Security Strategy</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Wife claims first (62–FRA depending on income). Husband delays to 70 — boosting his FRA benefit from $3,155 to <strong style="color:var(--c-cream);">$3,910/month</strong> (+24%). Maximizes survivor benefit for wife if he predeceases her. Portfolio bridges the gap. Considered the early-claiming argument too: SS can't be passed to heirs, but portfolio assets can — early SS means more portfolio growth for their beneficiary child.</p>
+                    </div>
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">Bucket Strategy to Solve Sequence-of-Returns Risk</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Rebalancing from 100% equities to a three-bucket system: <strong style="color:var(--c-cream);">3–5 years of expenses</strong> in conservative to moderate holdings (cash, bonds) that can be drawn in down markets without touching growth positions. Remaining assets stay in diversified equities. Stocks solve inflation risk; cash and bonds solve timing risk. Retirement needs both.</p>
+                    </div>
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">Farm Sale Tax Planning</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Three-layer analysis: (1) <strong style="color:var(--c-cream);">60% state tax exemption</strong> applies to farmland portion. (2) Sale during Medicare years increases MAGI → higher IRMAA bracket raises Part B premiums. (3) Holding the property until the first spouse's passing triggers a <strong style="color:var(--c-cream);">step-up in basis</strong> on the entire property — potentially eliminating the capital gain entirely.</p>
+                    </div>
+
+                    <div class="rec">
+                      <div style="font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.5rem;">Behavioral Finance: The Decumulation Shift</div>
+                      <p style="font-size:.845rem;color:var(--c-sage);line-height:1.68;font-weight:300;">Addressed the psychological challenge of moving from <strong style="color:var(--c-cream);">accumulation to decumulation</strong>. Guaranteed fixed income (SS + $25K farm rent) reduces anxiety and allows comfortable spending during the "go-go years." Spending patterns in retirement follow a predictable arc — up, then down, then up again at end-of-life — and a sound plan accounts for each phase.</p>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- sidebar -->
+              <div>
+                <div style="position:sticky;top:5.5rem;display:flex;flex-direction:column;gap:.875rem;">
+
+                  <div style="background:var(--c-base);border:1px solid var(--c-border);border-radius:2px;padding:1.375rem;">
+                    <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:1rem;">Tools Used</div>
+                    <div style="display:flex;flex-direction:column;gap:.45rem;">
+                      <div class="tool-chip"><span></span>MoneyGuide Pro</div>
+                      <div class="tool-chip"><span></span>IncomeLabs (SS + Withdrawal)</div>
+                      <div class="tool-chip"><span></span>Nitrogen (Risk Analysis)</div>
+                      <div class="tool-chip"><span></span>Holistiplan (Tax Return Mock)</div>
+                    </div>
+                  </div>
+
+                  <div style="background:var(--c-base);border:1px solid rgba(118,139,94,.22);border-radius:2px;padding:1.375rem;">
+                    <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:1.25rem;">Planning Impact</div>
+                    <div style="display:flex;flex-direction:column;gap:1.1rem;">
+                      <div class="imp">
+                        <div class="val">$3,910</div>
+                        <div class="lbl">Monthly SS benefit at age 70</div>
+                      </div>
+                      <div style="height:1px;background:var(--c-border);"></div>
+                      <div class="imp">
+                        <div class="val">+24%</div>
+                        <div class="lbl">SS increase vs. FRA benefit</div>
+                      </div>
+                      <div style="height:1px;background:var(--c-border);"></div>
+                      <div class="imp">
+                        <div class="val">$0</div>
+                        <div class="lbl">Debt entering retirement</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ EXPERIENCE -->
+  <section id="experience" style="padding:6rem 3rem;background:var(--c-base);">
+    <div style="max-width:1280px;margin:0 auto;">
+
+      <div class="reveal" style="margin-bottom:3.5rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">04</span>
+          <span style="width:36px;height:1px;background:var(--c-gold);"></span>
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-sage);">Experience</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:400;line-height:1.1;letter-spacing:-.03em;color:var(--c-cream);">
+          A track record of<br><em style="color:var(--c-gold-lt);">delivery.</em>
+        </h2>
+      </div>
+
+      <div style="max-width:740px;">
+        <div class="tl-wrap">
+
+          <!-- FIA -->
+          <div class="tl-item reveal d1">
+            <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;margin-bottom:.625rem;">
+              <h3 style="font-size:1.05rem;font-weight:600;color:var(--c-cream);letter-spacing:-.01em;">Financial Impact Advisors</h3>
+              <span class="tag" style="background:rgba(181,99,58,.08);color:var(--c-gold);border:1px solid rgba(118,139,94,.22);">Current</span>
+            </div>
+            <div style="font-size:.76rem;color:var(--c-gold);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.75rem;">Wealth Advisor · Jun 2025 – Present</div>
+            <div style="display:flex;flex-direction:column;gap:.45rem;">
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Co-led full planning cycle for <strong style="color:var(--c-cream);">$37.4M in NNA</strong> with partner advisor in 2025</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;"><strong style="color:var(--c-cream);">$4.8M</strong> in self-sourced and led AUM onboarded in 2025</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Full planning deliverables: cash-flow models, tax projections, retirement analyses, portfolio construction, scenario testing</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Strategies implemented: AQR Long/Short, 55ip Direct Indexing, NUA planning, Roth conversions, strategic withdrawals</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Madison Partners -->
+          <div class="tl-item reveal d2">
+            <div style="margin-bottom:.625rem;">
+              <h3 style="font-size:1.05rem;font-weight:600;color:var(--c-cream);letter-spacing:-.01em;">Madison Partners</h3>
+            </div>
+            <div style="font-size:.76rem;color:var(--c-gold);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.75rem;">Wealth Advisor · 2024–2025</div>
+            <div style="display:flex;flex-direction:column;gap:.45rem;">
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">2nd chair through <strong style="color:var(--c-cream);">250+ annual reviews</strong> and 40+ client onboards</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Built and maintained E-Money plans driving retirement and tax planning strategies; executed portfolio trading and rebalancing</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Managed inbound prospects and solo led discovery meetings; supported onboarding, asset transfers, and qualified rollovers</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zendesk -->
+          <div class="tl-item reveal d3">
+            <div style="margin-bottom:.625rem;">
+              <h3 style="font-size:1.05rem;font-weight:600;color:var(--c-cream);letter-spacing:-.01em;">Zendesk</h3>
+            </div>
+            <div style="font-size:.76rem;color:var(--c-gold);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.75rem;">Enterprise SDR · 2022–2024</div>
+            <div style="display:flex;flex-direction:column;gap:.45rem;">
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Consistent outperformance: Q1 146% · Q2 197% · Q3 184% · Q4 121% of quota</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">#2 SDR in Q2 for US · source-won 27 deals with <strong style="color:var(--c-cream);">$273,000 ARR</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simco -->
+          <div class="tl-item reveal d4">
+            <div style="margin-bottom:.625rem;">
+              <h3 style="font-size:1.05rem;font-weight:600;color:var(--c-cream);letter-spacing:-.01em;">Simco Container Service</h3>
+            </div>
+            <div style="font-size:.76rem;color:var(--c-gold);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.75rem;">Founder &amp; Owner · 2020–2022</div>
+            <div style="display:flex;flex-direction:column;gap:.45rem;">
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Founded waste management business from scratch — financing, insurance, equipment, facilities, and client acquisition</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="color:var(--c-gold);font-size:.72rem;margin-top:3px;flex-shrink:0;">—</span>
+                <span style="font-size:.865rem;color:var(--c-sage);line-height:1.65;font-weight:300;">Scaled to 2 semi-trucks, 36 dumpsters, <strong style="color:var(--c-cream);">$17,000 monthly revenue</strong>. Successful exit 2022.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ CONTACT -->
+  <section id="contact" style="background:var(--c-surface);border-top:1px solid var(--c-border);">
+    <div style="max-width:1280px;margin:0 auto;padding:6rem 3rem;">
+
+      <div class="grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;">
+
+        <div class="reveal">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+            <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">05</span>
+            <span style="width:36px;height:1px;background:var(--c-gold);"></span>
+            <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-sage);">Get in Touch</span>
+          </div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:400;line-height:1.1;letter-spacing:-.03em;color:var(--c-cream);margin-bottom:1.5rem;">
+            Let's connect.
+          </h2>
+          <p style="font-size:.96rem;line-height:1.8;color:var(--c-sage);font-weight:300;max-width:420px;margin-bottom:2.5rem;">
+            Looking to add a comprehensive planner to your team? I'd love to connect and talk about how I can bring value.
+          </p>
+          <div style="display:flex;flex-wrap:wrap;gap:.875rem;">
+            <a href="mailto:nickrsimonson@gmail.com" class="btn-g">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="3.5" width="12" height="8" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M1.5 4.5l6 4 6-4" stroke="currentColor" stroke-width="1.1"/></svg>
+              Send an Email
+            </a>
+            <a href="tel:6085729143" class="btn-o">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1.5 2.5c0-.553.447-1 1-1h1.927a1 1 0 0 1 .985.837l.357 2.142a1 1 0 0 1-.548 1.07l-.893.447a7.503 7.503 0 0 0 3.676 3.676l.447-.893a1 1 0 0 1 1.07-.548l2.142.357a1 1 0 0 1 .837.986V11.5a1 1 0 0 1-1 1C6.037 12.5 1.5 7.963 1.5 3.5V2.5Z" stroke="currentColor" stroke-width="1.1"/></svg>
+              608-572-9143
+            </a>
+          </div>
+        </div>
+
+        <div class="reveal d2">
+          <div style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;padding:2rem;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2rem;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#768B5E;box-shadow:0 0 0 3px rgba(118,139,94,.2);animation:pulse 2.5s ease infinite;"></span>
+              <span style="font-size:.78rem;color:#768B5E;font-weight:500;letter-spacing:.04em;">Open to new opportunities</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1.25rem;">
+              <div style="padding-bottom:1.25rem;border-bottom:1px solid var(--c-border);">
+                <div style="font-size:.67rem;letter-spacing:.13em;text-transform:uppercase;color:var(--c-sage);margin-bottom:.4rem;">Email</div>
+                <a href="mailto:nickrsimonson@gmail.com" style="font-size:.975rem;color:var(--c-cream);text-decoration:none;transition:color .2s ease;" onmouseover="this.style.color='var(--c-gold)'" onmouseout="this.style.color='var(--c-cream)'">nickrsimonson@gmail.com</a>
+              </div>
+              <div style="padding-bottom:1.25rem;border-bottom:1px solid var(--c-border);">
+                <div style="font-size:.67rem;letter-spacing:.13em;text-transform:uppercase;color:var(--c-sage);margin-bottom:.4rem;">Phone</div>
+                <a href="tel:6085729143" style="font-size:.975rem;color:var(--c-cream);text-decoration:none;transition:color .2s ease;" onmouseover="this.style.color='var(--c-gold)'" onmouseout="this.style.color='var(--c-cream)'">608-572-9143</a>
+              </div>
+              <div>
+                <div style="font-size:.67rem;letter-spacing:.13em;text-transform:uppercase;color:var(--c-sage);margin-bottom:.4rem;">Location</div>
+                <div style="font-size:.975rem;color:var(--c-cream);">Madison, Wisconsin</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--c-border);padding:1.375rem 3rem;">
+      <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.875rem;">
+        <div style="font-size:.76rem;color:var(--c-sage);">Nick Simonson, CFP® · Wealth Advisor · Madison, WI</div>
+        <div style="font-size:.7rem;color:var(--c-muted);">Case studies use anonymized client data for illustrative purposes only.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ JS -->
+  <script>
+    // ── GRAIN ────────────────────────────────────
+    (function() {
+      const c = document.createElement('canvas');
+      c.width = c.height = 256;
+      const ctx = c.getContext('2d');
+      const d = ctx.createImageData(256, 256);
+      for (let i = 0; i < d.data.length; i += 4) {
+        const v = Math.random() * 255 | 0;
+        d.data[i] = d.data[i+1] = d.data[i+2] = v;
+        d.data[i+3] = 255;
+      }
+      ctx.putImageData(d, 0, 0);
+      document.getElementById('grain').style.backgroundImage = 'url(' + c.toDataURL() + ')';
+    })();
+
+    // ── NAV SCROLL ───────────────────────────────
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // ── MOBILE MENU ──────────────────────────────
+    document.getElementById('mob-btn').addEventListener('click', () => {
+      document.getElementById('mob-menu').classList.toggle('hidden');
+    });
+    function closeMob() {
+      document.getElementById('mob-menu').classList.add('hidden');
+    }
+
+    // ── SCROLL REVEAL ────────────────────────────
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+    }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    // ── EXPERTISE MODALS ─────────────────────────
+    function openModal(id) {
+      document.getElementById('modal-overlay').style.display = 'block';
+      document.getElementById(id).style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('modal-overlay').style.display = 'none';
+      document.querySelectorAll('.exp-modal').forEach(m => m.style.display = 'none');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── CASE STUDY TOGGLE ────────────────────────
+    function toggleCase(id) {
+      const body    = document.getElementById(id + '-body');
+      const chevron = document.getElementById(id + '-chevron-wrap');
+      const btn     = document.getElementById(id + '-btn');
+      const isOpen  = body.classList.contains('open');
+
+      // close all
+      document.querySelectorAll('.case-body').forEach(b => b.classList.remove('open'));
+      document.querySelectorAll('[id$="-chevron-wrap"]').forEach(c => c.style.transform = '');
+      document.querySelectorAll('.case-btn').forEach(b => b.setAttribute('aria-expanded','false'));
+
+      if (!isOpen) {
+        body.classList.add('open');
+        chevron.style.transform = 'rotate(180deg)';
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    // ── NAV ACTIVE STATE ─────────────────────────
+    const navLinks = document.querySelectorAll('.nav-a[href^="#"]');
+    const sectionObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
+  </script>
+
+</body>
+</html>
