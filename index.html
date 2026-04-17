@@ -277,6 +277,9 @@
       text-align: center;
     }
 
+    /* ─── CONTENT SECTION ───────────────────────── */
+    .content-card:hover .content-img { transform: scale(1.04) }
+
     /* ─── RESPONSIVE ──────────────────────────── */
     @media (max-width: 900px) {
       .grid-2col { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
@@ -286,6 +289,10 @@
       section, #contact > div { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
       h1 { font-size: clamp(3.2rem, 14vw, 5rem) !important; }
       .tl-wrap { padding-left: 1.25rem }
+      .content-grid { grid-template-columns: 1fr 1fr !important; }
+    }
+    @media (max-width: 600px) {
+      .content-grid { grid-template-columns: 1fr !important; }
     }
 
     /* nav link active */
@@ -348,6 +355,7 @@
         <a href="#about"      class="nav-a">About</a>
         <a href="#expertise"  class="nav-a">Expertise</a>
         <a href="#cases"      class="nav-a">Case Studies</a>
+        <a href="#content"    class="nav-a">Content</a>
         <a href="#experience" class="nav-a">Experience</a>
         <a href="#contact" class="btn-g" style="padding:9px 20px;font-size:.72rem;">Get in Touch</a>
       </div>
@@ -362,6 +370,7 @@
         <a href="#about"      class="nav-a" onclick="closeMob()">About</a>
         <a href="#expertise"  class="nav-a" onclick="closeMob()">Expertise</a>
         <a href="#cases"      class="nav-a" onclick="closeMob()">Case Studies</a>
+        <a href="#content"    class="nav-a" onclick="closeMob()">Content</a>
         <a href="#experience" class="nav-a" onclick="closeMob()">Experience</a>
         <a href="#contact" class="btn-g" style="width:fit-content;margin-top:.25rem;" onclick="closeMob()">Get in Touch</a>
       </div>
@@ -1095,13 +1104,123 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════ CONTENT -->
+  <section id="content" style="padding:6rem 3rem;background:var(--c-base);">
+    <div style="max-width:1280px;margin:0 auto;">
+
+      <div class="reveal" style="margin-bottom:3rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">04</span>
+          <span style="width:36px;height:1px;background:var(--c-gold);"></span>
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-sage);">Content</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:400;line-height:1.1;letter-spacing:-.03em;color:var(--c-cream);margin-bottom:1rem;">
+          Communication in action.
+        </h2>
+        <p style="font-size:.96rem;line-height:1.75;color:var(--c-sage);max-width:540px;font-weight:300;">How I communicate complex financial topics — through client emails and video content designed to educate, build trust, and demonstrate value.</p>
+      </div>
+
+      <!-- tabs -->
+      <div class="reveal d1" style="display:flex;border-bottom:1px solid var(--c-border);margin-bottom:3rem;">
+        <button id="tab-email" onclick="switchTab('email')" style="padding:.875rem 1.5rem;background:none;border:none;border-bottom:2px solid var(--c-gold);margin-bottom:-1px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--c-gold);transition:color .2s ease,border-color .2s ease;">Emails Sent</button>
+        <button id="tab-video" onclick="switchTab('video')" style="padding:.875rem 1.5rem;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--c-sage);transition:color .2s ease,border-color .2s ease;">Video Content</button>
+      </div>
+
+      <!-- ── EMAIL PANEL -->
+      <div id="panel-email">
+        <div class="content-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+
+          <div class="reveal d1 content-card lift" onclick="openEmailLightbox(0)" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;overflow:hidden;cursor:pointer;">
+            <div style="position:relative;overflow:hidden;aspect-ratio:3/4;">
+              <img src="content/email-1.png" onerror="this.src='https://placehold.co/600x800/E8DFC9/9E9080?text=Email+1'" alt="Email screenshot 1" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .5s cubic-bezier(.16,1,.3,1);" class="content-img">
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(37,43,30,.55) 0%,transparent 40%);pointer-events:none;"></div>
+              <div style="position:absolute;bottom:1rem;left:1rem;">
+                <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(181,99,58,.15);border:1px solid rgba(181,99,58,.3);border-radius:2px;">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x=".5" y="1.5" width="9" height="7" rx="1" stroke="var(--c-gold)" stroke-width="1"/><path d="M.5 3l4.5 3 4.5-3" stroke="var(--c-gold)" stroke-width="1"/></svg>
+                  <span style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);">Email</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding:1rem 1.25rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+              <p style="font-size:.84rem;line-height:1.6;color:var(--c-sage);font-weight:300;">Email to a client before a phone call.</p>
+              <div style="width:26px;height:26px;border-radius:50%;border:1px solid var(--c-gold);display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;flex-shrink:0;transition:background .2s ease;">+</div>
+            </div>
+          </div>
+
+          <div class="reveal d2 content-card lift" onclick="openEmailLightbox(1)" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;overflow:hidden;cursor:pointer;">
+            <div style="position:relative;overflow:hidden;aspect-ratio:3/4;">
+              <img src="content/email-2.png" onerror="this.src='https://placehold.co/600x800/E8DFC9/9E9080?text=Email+2'" alt="Email screenshot 2" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .5s cubic-bezier(.16,1,.3,1);" class="content-img">
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(37,43,30,.55) 0%,transparent 40%);pointer-events:none;"></div>
+              <div style="position:absolute;bottom:1rem;left:1rem;">
+                <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(181,99,58,.15);border:1px solid rgba(181,99,58,.3);border-radius:2px;">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x=".5" y="1.5" width="9" height="7" rx="1" stroke="var(--c-gold)" stroke-width="1"/><path d="M.5 3l4.5 3 4.5-3" stroke="var(--c-gold)" stroke-width="1"/></svg>
+                  <span style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);">Email</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding:1rem 1.25rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+              <p style="font-size:.84rem;line-height:1.6;color:var(--c-sage);font-weight:300;">Tax planning communication during a key transition period.</p>
+              <div style="width:26px;height:26px;border-radius:50%;border:1px solid var(--c-gold);display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;flex-shrink:0;transition:background .2s ease;">+</div>
+            </div>
+          </div>
+
+          <div class="reveal d3 content-card lift" onclick="openEmailLightbox(2)" style="background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;overflow:hidden;cursor:pointer;">
+            <div style="position:relative;overflow:hidden;aspect-ratio:3/4;">
+              <img src="content/email-3.png" onerror="this.src='https://placehold.co/600x800/E8DFC9/9E9080?text=Email+3'" alt="Email screenshot 3" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .5s cubic-bezier(.16,1,.3,1);" class="content-img">
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(37,43,30,.55) 0%,transparent 40%);pointer-events:none;"></div>
+              <div style="position:absolute;bottom:1rem;left:1rem;">
+                <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(181,99,58,.15);border:1px solid rgba(181,99,58,.3);border-radius:2px;">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x=".5" y="1.5" width="9" height="7" rx="1" stroke="var(--c-gold)" stroke-width="1"/><path d="M.5 3l4.5 3 4.5-3" stroke="var(--c-gold)" stroke-width="1"/></svg>
+                  <span style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);">Email</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding:1rem 1.25rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+              <p style="font-size:.84rem;line-height:1.6;color:var(--c-sage);font-weight:300;">Educational piece on retirement income sequencing.</p>
+              <div style="width:26px;height:26px;border-radius:50%;border:1px solid var(--c-gold);display:flex;align-items:center;justify-content:center;color:var(--c-gold);font-size:1.1rem;font-weight:300;flex-shrink:0;transition:background .2s ease;">+</div>
+            </div>
+          </div>
+
+        </div>
+        <p class="reveal d4" style="margin-top:1.5rem;font-size:.78rem;color:var(--c-muted);font-style:italic;">Click any screenshot to expand. Drop images named <code style="background:rgba(0,0,0,.05);padding:1px 5px;border-radius:2px;">email-1.png</code>, <code style="background:rgba(0,0,0,.05);padding:1px 5px;border-radius:2px;">email-2.png</code>, etc. into a <code style="background:rgba(0,0,0,.05);padding:1px 5px;border-radius:2px;">content/</code> folder to replace placeholders.</p>
+      </div>
+
+      <!-- ── VIDEO PANEL -->
+      <div id="panel-video" style="display:none;">
+        <div class="reveal" style="max-width:800px;margin:0 auto;">
+
+          <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:2px;border:1px solid var(--c-border);box-shadow:0 20px 60px -10px rgba(37,43,30,.18);">
+            <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" src="https://www.youtube.com/embed/0lMyTsPGdoU?rel=0&modestbranding=1" title="Nick Simonson CFP — Financial Planning Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+
+          <div style="margin-top:1.75rem;padding:1.5rem;background:var(--c-raised);border:1px solid var(--c-border);border-radius:2px;">
+            <div style="font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);font-weight:600;margin-bottom:.625rem;">About This Video</div>
+            <p style="font-size:.9rem;line-height:1.75;color:var(--c-sage);font-weight:300;">A short-form video walking through a real financial planning concept — designed to demonstrate how I communicate with clients and break down complex topics clearly.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- email lightbox -->
+  <div id="email-lightbox" onclick="closeEmailLightbox()" style="display:none;position:fixed;inset:0;background:rgba(30,26,20,.88);z-index:1002;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:2rem;">
+    <div onclick="event.stopPropagation()" style="position:relative;max-width:92vw;width:100%;">
+      <img id="lightbox-img" src="" alt="Email screenshot" style="width:100%;max-height:92vh;object-fit:contain;object-position:top;border-radius:2px;box-shadow:0 40px 100px rgba(0,0,0,.4);display:block;">
+      <button onclick="closeEmailLightbox()" aria-label="Close" style="position:absolute;top:-14px;right:-14px;width:32px;height:32px;border-radius:50%;background:var(--c-raised);border:1px solid var(--c-border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--c-sage);transition:background .2s ease;">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
   <!-- ═══════════════════════════════════════════ EXPERIENCE -->
   <section id="experience" style="padding:6rem 3rem;background:var(--c-base);">
     <div style="max-width:1280px;margin:0 auto;">
 
       <div class="reveal" style="margin-bottom:3.5rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
-          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">04</span>
+          <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);font-weight:600;">05</span>
           <span style="width:36px;height:1px;background:var(--c-gold);"></span>
           <span style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-sage);">Experience</span>
         </div>
@@ -1316,7 +1435,7 @@
       document.querySelectorAll('.exp-modal').forEach(m => m.style.display = 'none');
       document.body.style.overflow = '';
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    // Escape key handled in content tabs section below
 
     // ── CASE STUDY TOGGLE ────────────────────────
     function toggleCase(id) {
@@ -1336,6 +1455,33 @@
         btn.setAttribute('aria-expanded', 'true');
       }
     }
+
+    // ── CONTENT TABS ─────────────────────────────
+    function switchTab(tab) {
+      ['email', 'video'].forEach(t => {
+        const btn   = document.getElementById('tab-' + t);
+        const panel = document.getElementById('panel-' + t);
+        const on    = t === tab;
+        panel.style.display          = on ? 'block' : 'none';
+        btn.style.color              = on ? 'var(--c-gold)' : 'var(--c-sage)';
+        btn.style.borderBottomColor  = on ? 'var(--c-gold)' : 'transparent';
+      });
+    }
+
+    // ── EMAIL LIGHTBOX ────────────────────────────
+    const emailSrcs = ['content/email-1.png', 'content/email-2.png', 'content/email-3.png'];
+    function openEmailLightbox(idx) {
+      const lb  = document.getElementById('email-lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src           = emailSrcs[idx];
+      lb.style.display  = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeEmailLightbox() {
+      document.getElementById('email-lightbox').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeEmailLightbox(); } });
 
     // ── NAV ACTIVE STATE ─────────────────────────
     const navLinks = document.querySelectorAll('.nav-a[href^="#"]');
