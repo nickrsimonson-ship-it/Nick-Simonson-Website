@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nick Simonson — Brb</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Georgia', serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated stripe background */
+    .stripes {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        #1a1a1a 0px,
+        #1a1a1a 30px,
+        #222 30px,
+        #222 60px
+      );
+      z-index: 0;
+      animation: slide 6s linear infinite;
+    }
+
+    @keyframes slide {
+      from { background-position: 0 0; }
+      to { background-position: 84px 84px; }
+    }
+
+    /* Floating hard hats */
+    .hat {
+      position: fixed;
+      font-size: 2rem;
+      opacity: 0.12;
+      animation: floatHat linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hat:nth-child(1)  { left: 5%;  animation-duration: 14s; animation-delay: 0s;   font-size: 1.5rem; }
+    .hat:nth-child(2)  { left: 20%; animation-duration: 18s; animation-delay: -4s;  font-size: 2.5rem; }
+    .hat:nth-child(3)  { left: 40%; animation-duration: 11s; animation-delay: -8s;  font-size: 1.8rem; }
+    .hat:nth-child(4)  { left: 60%; animation-duration: 16s; animation-delay: -2s;  font-size: 3rem;   }
+    .hat:nth-child(5)  { left: 75%; animation-duration: 13s; animation-delay: -6s;  font-size: 2rem;   }
+    .hat:nth-child(6)  { left: 88%; animation-duration: 19s; animation-delay: -10s; font-size: 1.4rem; }
+
+    @keyframes floatHat {
+      from { transform: translateY(110vh) rotate(-10deg); }
+      to   { transform: translateY(-20vh) rotate(10deg);  }
+    }
+
+    /* Main card */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: #f5c518;
+      border: 6px solid #111;
+      border-radius: 4px;
+      padding: 52px 60px 48px;
+      max-width: 620px;
+      width: 92%;
+      text-align: center;
+      box-shadow:
+        8px 8px 0 #111,
+        0 0 60px rgba(245, 197, 24, 0.25);
+      animation: cardBob 4s ease-in-out infinite;
+    }
+
+    @keyframes cardBob {
+      0%, 100% { transform: translateY(0px);   }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .cone-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .cone {
+      font-size: 2.2rem;
+      display: inline-block;
+      animation: coneBounce 1.8s ease-in-out infinite;
+    }
+    .cone:nth-child(2) { animation-delay: 0.3s; }
+    .cone:nth-child(3) { animation-delay: 0.6s; }
+    .cone:nth-child(4) { animation-delay: 0.9s; }
+    .cone:nth-child(5) { animation-delay: 1.2s; }
+
+    @keyframes coneBounce {
+      0%, 100% { transform: translateY(0);    }
+      50%       { transform: translateY(-6px); }
+    }
+
+    .warning-tape {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .tape-text {
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      color: #111;
+      text-transform: uppercase;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .tape-icon {
+      font-size: 1.1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #111;
+      line-height: 1.25;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 em {
+      font-style: normal;
+      border-bottom: 4px solid #111;
+    }
+
+    .subtext {
+      font-size: 1.05rem;
+      color: #333;
+      line-height: 1.65;
+      margin-bottom: 30px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .cta {
+      display: inline-block;
+      background: #111;
+      color: #f5c518;
+      font-family: 'Arial', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, transform 0.1s;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    .cta:hover {
+      background: #f5c518;
+      color: #111;
+      outline: 3px solid #111;
+      transform: scale(1.04);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 197, 24, 0.4); }
+      50%       { box-shadow: 0 0 0 10px rgba(245, 197, 24, 0);  }
+    }
+
+    .sign-post {
+      margin-top: 40px;
+      font-size: 0.75rem;
+      color: rgba(245, 197, 24, 0.35);
+      font-family: 'Arial', sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    /* Rotating gear in corner */
+    .gear {
+      position: fixed;
+      font-size: 5rem;
+      opacity: 0.06;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .gear-tl { top: -1rem;  left: -1rem; animation: spin 12s linear infinite; }
+    .gear-br { bottom: -1rem; right: -1rem; animation: spin 18s linear infinite reverse; }
+
+    @keyframes spin {
+      from { transform: rotate(0deg);   }
+      to   { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stripes"></div>
+
+  <span class="hat">⛑️</span>
+  <span class="hat">⛑️</span>
+  <span class="hat">⛑️</span>
+  <span class="hat">⛑️</span>
+  <span class="hat">⛑️</span>
+  <span class="hat">⛑️</span>
+
+  <div class="gear gear-tl">⚙️</div>
+  <div class="gear gear-br">⚙️</div>
+
+  <div class="card">
+    <div class="cone-row">
+      <span class="cone">🚧</span>
+      <span class="cone">🦺</span>
+      <span class="cone">⛑️</span>
+      <span class="cone">🦺</span>
+      <span class="cone">🚧</span>
+    </div>
+
+    <div class="warning-tape">
+      <span class="tape-icon">⚠️</span>
+      <span class="tape-text">Caution — Construction Zone</span>
+      <span class="tape-icon">⚠️</span>
+    </div>
+
+    <h1>Site is on <em>Pause</em>.</h1>
+
+    <p class="subtext">
+      The workers went home. The scaffolding is still up.<br />
+      Something great is behind here — I promise.<br /><br />
+      Want to take a peek behind the cones?<br />
+      Shoot me a note and I'll pull them aside for you. 🪣
+    </p>
+
+    <a class="cta" href="mailto:nickrsimonson@gmail.com?subject=I want to see the site!">
+      📬 &nbsp;Let Me In
+    </a>
+  </div>
+
+  <p class="sign-post">nicksimonson.com &mdash; back soon</p>
+
+</body>
+</html>
